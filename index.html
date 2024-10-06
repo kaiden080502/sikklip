@@ -3,17 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>petek</title>
+    <title>Peta Leaflet dengan Citra Satelit dan GeoJSON</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <style>
         #map {
             height: 600px;
             width: 100%;
         }
+        .layer-control {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: white;
+            padding: 10px;
+            z-index: 1000;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+        }
     </style>
 </head>
 <body>
-    <h1>Peta Leaflet dengan Citra Satelit MapTiler</h1>
+    <h1>Peta Leaflet dengan Citra Satelit dan GeoJSON</h1>
+    <div class="layer-control">
+        <label>
+            <input type="checkbox" id="satelliteLayer" checked>
+            Tampilkan Citra Satelit petek
+        </label>
+    </div>
     <div id="map"></div>
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
@@ -21,12 +37,16 @@
         // Inisialisasi peta
         var map = L.map('map').setView([-9.25, 124.25], 9); // Sesuaikan dengan koordinat yang diinginkan
 
+        // Menambahkan layer dasar dari OpenStreetMap
+        var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+        }).addTo(map);
+
         // Menambahkan citra satelit dari MapTiler menggunakan API Key
-       // Menambahkan citra satelit dari MapTiler menggunakan API Key
-L.tileLayer('https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=sPgrtHzQ1knf8XW3wPsx', {
-    attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a>',
-    maxZoom: 18
-}).addTo(map);
+        var satelliteLayer = L.tileLayer('https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=sPgrtHzQ1knf8XW3wPsx', {
+            attribution: '&copy; <a href="https://www.maptiler.com/copyright/">MapTiler</a>',
+            maxZoom: 18,
+        });
 
         // Mengambil file GeoJSON dari GitHub RAW link
         fetch('https://raw.githubusercontent.com/kaiden080502/sikklip/main/protected/adm.json')
@@ -36,6 +56,15 @@ L.tileLayer('https://api.maptiler.com/maps/hybrid/{z}/{x}/{y}.jpg?key=sPgrtHzQ1k
                 L.geoJSON(data).addTo(map);
             })
             .catch(error => console.error('Error loading the GeoJSON:', error));
+
+        // Menangani checkbox untuk menampilkan/menghilangkan citra satelit
+        document.getElementById('satelliteLayer').addEventListener('change', function() {
+            if (this.checked) {
+                map.addLayer(satelliteLayer);
+            } else {
+                map.removeLayer(satelliteLayer);
+            }
+        });
     </script>
 </body>
 </html>
