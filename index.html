@@ -27,7 +27,7 @@
         }).addTo(map);
 
         // Mengambil file GeoJSON dari GitHub Pages
-        fetch('https://raw.githubusercontent.com/kaiden080502/sikklip/refs/heads/main/protected/adm.json') // Ganti dengan link ke file GeoJSON kamu
+        fetch('https://raw.githubusercontent.com/kaiden080502/sikklip/refs/heads/main/protected/adm.json')
             .then(response => response.json())
             .then(data => {
                 // Menambahkan layer GeoJSON ke peta
